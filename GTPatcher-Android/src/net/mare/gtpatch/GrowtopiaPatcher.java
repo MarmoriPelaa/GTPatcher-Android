@@ -23,8 +23,7 @@ public class GrowtopiaPatcher {
 		if (args != null && args.length > 0 && args[0] != null) {
 			filename = args[0];
 			File apkfile = new File(filename);
-			if (!(apkfile.exists() && !apkfile.isDirectory() && apkfile.canRead()
-					&& apkfile.getParentFile().canWrite())) {
+			if (!(apkfile.exists() && !apkfile.isDirectory() && apkfile.canRead())) {
 				System.err.println("Invalid file: " + filename);
 				return;
 			}
@@ -71,7 +70,6 @@ public class GrowtopiaPatcher {
 					fos.write(buf, 0, len);
 				}
 				fos.close();
-				
 
 				RandomAccessFile f = new RandomAccessFile("tmp_libgrowtopia.so", "r");
 				byte[] b = new byte[(int) f.length()];
@@ -119,7 +117,7 @@ public class GrowtopiaPatcher {
 					}
 				}
 				zos.write(b);
-				
+
 			} else {
 				zos.putNextEntry(new ZipEntry(entryIn.getName()));
 				InputStream is = apk.getInputStream(entryIn);
@@ -133,6 +131,7 @@ public class GrowtopiaPatcher {
 		}
 		zos.close();
 		apk.close();
-		System.out.println("Success! Now it's up to you to sign the apk (look up apk-signer from Google Play Store for example)");
+		System.out.println(
+				"Success! Now it's up to you to sign the apk (look up apk-signer from Google Play Store for example)");
 	}
 }
