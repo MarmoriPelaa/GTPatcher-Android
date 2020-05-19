@@ -3,7 +3,7 @@ Tool for patching Growtopia apk ip address for private servers.
 
 # Notes
 - After patching, you have to sign the apk in order to install it on android.
-- Please do not create issues about no sound playing. There is no way to fix this at it's current state. The cause could be a fake signature that some apps use. I will look forward to it.
+- ~~Please do not create issues about no sound playing. There is no way to fix this at it's current state. The cause could be a fake signature that some apps use. I will look forward to it.~~ This should now be fixed, but if it doesn't work for you, please don't create new issues about it.
 - Tested only with ip addresses that are 14 characters in length. It should also work on less, but not more.
 - Tested on Eclipse IDE.
 # Usage
