@@ -55,7 +55,7 @@ public class GrowtopiaPatcher {
 
 		ZipFile apk = new ZipFile(filename);
 		ZipOutputStream zos = new ZipOutputStream(
-				new FileOutputStream(filename.substring(0, filename.lastI	ndexOf(".")) + "_patched.apk"));
+				new FileOutputStream(filename.substring(0, filename.lastIndexOf(".")) + "_patched.apk"));
 		for (Enumeration e = apk.entries(); e.hasMoreElements();) {
 			ZipEntry entryIn = (ZipEntry) e.nextElement();
 			
