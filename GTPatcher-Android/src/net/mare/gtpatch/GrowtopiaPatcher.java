@@ -43,7 +43,7 @@ public class GrowtopiaPatcher {
 			altIp = args[2];
 		}
 		try {
-			route3(filename, ip, altIp);
+			replace(filename, ip, altIp);
 		} catch (Exception e) {
 			System.err.println("Something went wrong. Please submit a report with the details below: ");
 			e.printStackTrace();
@@ -51,15 +51,20 @@ public class GrowtopiaPatcher {
 		}
 	}
 
-	public static void route3(String filename, String ip, String altIp) throws Exception {
+	public static void replace(String filename, String ip, String altIp) throws Exception {
 
 		ZipFile apk = new ZipFile(filename);
 		ZipOutputStream zos = new ZipOutputStream(
 				new FileOutputStream(filename.substring(0, filename.lastI	ndexOf(".")) + "_patched.apk"));
 		for (Enumeration e = apk.entries(); e.hasMoreElements();) {
 			ZipEntry entryIn = (ZipEntry) e.nextElement();
+			
+			ZipEntry entr = new ZipEntry(entryIn.getName());
+			entr.setCrc(entryIn.getCrc());
+			entr.setSize(entryIn.getSize());
+			entr.setMethod(entryIn.getMethod());
 			if (entryIn.getName().contains("libgrowtopia.so")) {
-				zos.putNextEntry(new ZipEntry(entryIn.getName()));
+				zos.putNextEntry(entr);
 				File tmp = new File("tmp_libgrowtopia.so");
 				tmp.deleteOnExit();
 				FileOutputStream fos = new FileOutputStream(tmp);
@@ -70,6 +75,7 @@ public class GrowtopiaPatcher {
 					fos.write(buf, 0, len);
 				}
 				fos.close();
+				
 
 				RandomAccessFile f = new RandomAccessFile("tmp_libgrowtopia.so", "r");
 				byte[] b = new byte[(int) f.length()];
@@ -79,18 +85,18 @@ public class GrowtopiaPatcher {
 				byte[] replacer = ip.getBytes();
 				for (int i = 0; i < b.length - toreplace.length; i++) {
 					boolean success = true;
-					for (int j = 0; j < toreplace.length; j++) {
+					for (int j = 0; j < toreplace.length; j++) { //find location of growtopia1.com
 						if (b[i + j] != toreplace[j]) {
-							success = false;
+							success = false; //growtopia1.com found
 							break;
 						}
 					}
-					if (success) {
+					if (success) { //check if growtopia1.com was found.
 						for (int j = 0; j < toreplace.length; j++) {
 							if (j < replacer.length) {
-								b[i + j] = replacer[j];
+								b[i + j] = replacer[j]; //replace growtopia1.com with some other ip.
 							} else {
-								b[i + j] = 0;
+								b[i + j] = 0; //pad with zeros if necessary.
 							}
 						}
 					}
@@ -100,26 +106,26 @@ public class GrowtopiaPatcher {
 				replacer = altIp.getBytes();
 				for (int i = 0; i < b.length - toreplace.length; i++) {
 					boolean success = true;
-					for (int j = 0; j < toreplace.length; j++) {
+					for (int j = 0; j < toreplace.length; j++) { //find location of growtopia2.com
 						if (b[i + j] != toreplace[j]) {
-							success = false;
+							success = false; //growtopia1.com found
 							break;
 						}
 					}
-					if (success) {
+					if (success) { //check if growtopia2.com was found
 						for (int j = 0; j < toreplace.length; j++) {
 							if (j < replacer.length) {
-								b[i + j] = replacer[j];
+								b[i + j] = replacer[j]; //replace growtopia1.com with some other ip.
 							} else {
-								b[i + j] = 0;
+								b[i + j] = 0; //pad with zeros if necessary.
 							}
 						}
 					}
 				}
 				zos.write(b);
-
+				
 			} else {
-				zos.putNextEntry(new ZipEntry(entryIn.getName()));
+				zos.putNextEntry(entr);
 				InputStream is = apk.getInputStream(entryIn);
 				byte[] buf = new byte[1024];
 				int len;
